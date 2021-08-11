@@ -6,12 +6,12 @@ def run():
     evenly_divided()
 
 
+
 def even_or_odd():
     print("Let's find if your number is even or odd.")
     num = input('Enter a number: ')
 
-    print(num, ' is an even number.') if int(num) % 2 == 0 else print(num,
-                                                                      ' is an odd number')
+    print(num, ' is an even number.') if int(num) % 2 == 0 else print(num, ' is an odd number')
 
 
 def is_multiple_of_4():
