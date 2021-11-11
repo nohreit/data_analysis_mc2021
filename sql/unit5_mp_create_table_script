@@ -1,0 +1,55 @@
+create table Customer (
+	Customer_ID_Number serial primary key,
+	Customer_First_Name varchar(255) not null,
+	Customer_Last_Name varchar(255) not null,
+	Customer_Type varchar(25) not null, -- business or individual
+	Business_Name varchar(255), -- if applicable
+	Address_Street_Name_Line_One varchar(255) not null,
+	Address_Street_Name_Line_Two varchar(255) not null, -- may be if you have one
+	Address_City varchar(255) not null,
+	Address_State varchar(255) not null,
+	Address_Postal_Code integer not null,
+	Address_Type  varchar(255) not null, -- business or residential
+	Customer_Birth_Date date not null, 
+	Risk_Score integer not null -- on a scale of 0-5 or 1-5 for example?
+);
+
+create table Policy_Detail (
+	Customer_ID_Number integer not null, -- fk to Customer
+	Policy_Number serial primary key,
+	Policy_Effective_Date date not null,
+	Policy_Expiration_Date date not null,
+	Policy_Limit numeric(9,2) not null, -- Limit of coverage amount in the policy
+	Policy_Type  varchar(255) not null, -- Type of policy issued (e.g. Auto Liability, etc.)
+	Currency_Type  varchar(255) not null, -- Type of currency used to pay for the policy premium (i.e. USD, Euro, etc.)
+	Premium_Cost numeric(9,2) not null,
+	foreign key (Customer_ID_Number) references Customer(Customer_ID_Number)
+);
+
+create table Claim (
+	Claim_ID_Number serial primary key,
+	Claim_Receipt_Date date not null,
+	Claim_Description varchar(255) not null,
+	Claimant_Birth_Date date not null, -- same as the customer's?
+	Law_Suit_Indicator varchar(255) not null,
+	Claimant_First_Name varchar(255) not null, -- same as the customer's?
+	Claimant_Last_Name varchar(255) not null, -- same as the customer's?
+	Policy_Number integer not null, -- fk to Policy_Detail
+	Claimant_Occupation varchar(255) not null, -- same as the customer's?
+	Loss_Date date not null,
+	Claim_Amount numeric(9,2) not null,
+	Claim_Paid_Amount numeric(9,2) not null,
+	Claim_Paid_Date date not null,
+	foreign key (Policy_Number) references Policy_Detail(Policy_Number)
+);
+
+-- alter table Customer rename to Client; -- rename the table;
+
+create table Reserves(
+	Customer_ID_Number integer not null, -- fk to Customer
+	Policy_Number integer not null, -- fk to Policy_Detail
+	Reserved_Amount numeric(9,2) not null, -- Amount of money the insurance company has set aside (reserved to cover claims)
+	Reserved_Date date not null, -- Date that the reserves were established for the policy year,
+	foreign key (Policy_Number) references Policy_Detail(Policy_Number),
+	foreign key (Customer_ID_Number) references Customer(Customer_ID_Number)
+);
